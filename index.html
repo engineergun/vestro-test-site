@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VESTRO — Test Mağazası</title>
+
+<!-- ============================================================
+     GOOGLE TAG MANAGER — <head> içi kod
+     Kendi GTM-XXXXXXX ID'ni buraya ve <body> içindeki noscript'e yaz.
+     Şimdilik GTM-XXXXXXX placeholder olarak duruyor, site bu haliyle
+     de sorunsuz çalışır (GTM script'i sessizce 404 verir).
+     ============================================================ -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+<!-- GTM head kodu sonu -->
+
+<style>
+  :root{
+    --bg: #EDEAE3;
+    --bg-panel: #F6F4EF;
+    --ink: #23262B;
+    --ink-soft: #5B5D57;
+    --plum: #6B2737;
+    --plum-deep: #4A1B27;
+    --sage: #A8B5A0;
+    --line: #D8D3C6;
+    --white: #FFFFFF;
+    --radius: 2px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  @font-face{
+    font-family:'Fraunces-fallback';
+    src:local('Georgia');
+  }
+  h1,h2,h3, .display{
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit; text-decoration:none;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(237,234,227,0.92);
+    backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    max-width:1180px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:20px 24px;
+  }
+  .logo{
+    font-family:Georgia, serif; font-size:22px; font-weight:700;
+    letter-spacing:0.14em;
+  }
+  .nav-links{display:flex; gap:32px; font-size:13px; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-soft);}
+  .nav-links a:hover{color:var(--plum);}
+  .nav-right{display:flex; align-items:center; gap:20px;}
+  .bag-btn{
+    position:relative; background:none; border:none; cursor:pointer;
+    font-size:13px; letter-spacing:0.06em; text-transform:uppercase;
+    display:flex; align-items:center; gap:8px; color:var(--ink);
+  }
+  .bag-count{
+    background:var(--plum); color:var(--white);
+    width:18px; height:18px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px; font-family:sans-serif;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    max-width:1180px; margin:0 auto;
+    padding:64px 24px 48px;
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px;
+    align-items:end;
+  }
+  .hero-eyebrow{
+    font-size:12px; letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--plum); margin-bottom:18px; display:block;
+  }
+  .hero h1{
+    font-size:56px; line-height:1.02; color:var(--ink);
+  }
+  .hero p{
+    margin-top:20px; color:var(--ink-soft); font-size:16px; max-width:40ch; line-height:1.6;
+  }
+  .hero-note{
+    background:var(--bg-panel); border:1px solid var(--line);
+    padding:20px 22px; font-size:13px; color:var(--ink-soft); line-height:1.6;
+  }
+  .hero-note strong{color:var(--ink); display:block; margin-bottom:6px; font-size:13px; text-transform:uppercase; letter-spacing:0.05em;}
+
+  /* ---------- Swatch filter (signature element) ---------- */
+  .swatch-bar{
+    max-width:1180px; margin:0 auto; padding:0 24px 40px;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  }
+  .swatch-label{font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-soft); margin-right:6px;}
+  .swatch{
+    display:flex; align-items:center; gap:8px;
+    border:1px solid var(--line); background:var(--bg-panel);
+    padding:6px 14px 6px 8px; cursor:pointer; font-size:12px; letter-spacing:0.03em;
+    transition: border-color .15s ease;
+  }
+  .swatch:hover, .swatch.active{border-color:var(--ink);}
+  .swatch-dot{width:14px; height:14px; border-radius:50%; border:1px solid rgba(0,0,0,0.15);}
+
+  /* ---------- Product grid ---------- */
+  .grid-wrap{max-width:1180px; margin:0 auto; padding:0 24px 80px;}
+  .grid-header{
+    display:flex; justify-content:space-between; align-items:baseline;
+    border-bottom:1px solid var(--line); padding-bottom:16px; margin-bottom:32px;
+  }
+  .grid-header h2{font-size:22px;}
+  .grid-count{font-size:13px; color:var(--ink-soft);}
+  .grid{
+    display:grid; grid-template-columns:repeat(4, 1fr); gap:28px;
+  }
+  .card{
+    cursor:pointer; background:var(--bg-panel); border:1px solid var(--line);
+    display:flex; flex-direction:column;
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{transform:translateY(-3px); box-shadow:0 12px 24px rgba(35,38,43,0.08);}
+  .card-media{
+    aspect-ratio: 3/4; display:flex; align-items:center; justify-content:center;
+    font-family:Georgia, serif; font-size:13px; color:rgba(35,38,43,0.35);
+    letter-spacing:0.08em; text-transform:uppercase;
+  }
+  .card-body{padding:16px 16px 20px; border-top:1px solid var(--line);}
+  .card-tag{font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--plum); margin-bottom:6px; display:block;}
+  .card-title{font-family:Georgia, serif; font-size:16px; margin-bottom:6px;}
+  .card-price{font-size:14px; color:var(--ink-soft);}
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(35,38,43,0.5);
+    display:none; align-items:center; justify-content:center; z-index:100; padding:20px;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--white); max-width:760px; width:100%;
+    display:grid; grid-template-columns:1fr 1fr; max-height:88vh; overflow:auto;
+  }
+  .modal-media{
+    background:var(--bg-panel); display:flex; align-items:center; justify-content:center;
+    font-family:Georgia, serif; color:rgba(35,38,43,0.3); letter-spacing:0.08em; text-transform:uppercase; font-size:13px;
+  }
+  .modal-body{padding:36px;}
+  .modal-close{float:right; background:none; border:none; font-size:20px; cursor:pointer; color:var(--ink-soft);}
+  .modal-tag{font-size:11px; letter-spacing:0.08em; text-transform:uppercase; color:var(--plum); margin-bottom:10px; display:block;}
+  .modal-body h3{font-size:26px; margin-bottom:10px;}
+  .modal-price{font-size:18px; color:var(--ink-soft); margin-bottom:20px;}
+  .modal-body p.desc{font-size:14px; color:var(--ink-soft); line-height:1.7; margin-bottom:24px;}
+  .size-row{display:flex; gap:8px; margin-bottom:28px;}
+  .size-btn{
+    border:1px solid var(--line); background:none; padding:8px 14px; font-size:13px; cursor:pointer;
+  }
+  .size-btn.active, .size-btn:hover{border-color:var(--ink); background:var(--ink); color:var(--white);}
+  .add-btn{
+    width:100%; background:var(--plum); color:var(--white); border:none;
+    padding:16px; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
+    transition:background .15s ease;
+  }
+  .add-btn:hover{background:var(--plum-deep);}
+  .test-flag{
+    margin-top:16px; font-size:11px; color:var(--ink-soft); border-top:1px solid var(--line); padding-top:14px; line-height:1.6;
+  }
+
+  /* ---------- Cart drawer ---------- */
+  .drawer{
+    position:fixed; top:0; right:-420px; width:400px; height:100%;
+    background:var(--white); z-index:110; box-shadow:-8px 0 30px rgba(0,0,0,0.15);
+    transition:right .28s ease; display:flex; flex-direction:column;
+  }
+  .drawer.open{right:0;}
+  .drawer-head{
+    padding:24px; border-bottom:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .drawer-head h3{font-size:18px;}
+  .drawer-items{flex:1; overflow:auto; padding:20px 24px;}
+  .drawer-item{display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); font-size:14px;}
+  .drawer-empty{color:var(--ink-soft); font-size:14px; padding:40px 0; text-align:center;}
+  .drawer-foot{padding:24px; border-top:1px solid var(--line);}
+  .drawer-total{display:flex; justify-content:space-between; font-size:15px; margin-bottom:16px;}
+  .checkout-btn{
+    width:100%; background:var(--ink); color:var(--white); border:none;
+    padding:16px; font-size:13px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
+  }
+  .drawer-note{font-size:11px; color:var(--ink-soft); margin-top:10px; text-align:center; line-height:1.5;}
+
+  footer{
+    border-top:1px solid var(--line); padding:40px 24px; text-align:center;
+    font-size:12px; color:var(--ink-soft);
+  }
+
+  @media (max-width:900px){
+    .hero{grid-template-columns:1fr; padding-top:40px;}
+    .hero h1{font-size:38px;}
+    .grid{grid-template-columns:repeat(2,1fr);}
+    .modal{grid-template-columns:1fr;}
+    .drawer{width:100%; right:-100%;}
+  }
+</style>
+</head>
+<body>
+
+<!-- GTM noscript (body açılışına hemen sonra gelmeli) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<header>
+  <div class="nav">
+    <div class="logo">VESTRO</div>
+    <nav class="nav-links">
+      <a href="#">Kadın</a>
+      <a href="#">Erkek</a>
+      <a href="#">Aksesuar</a>
+      <a href="#">Yeni Gelenler</a>
+    </nav>
+    <div class="nav-right">
+      <button class="bag-btn" onclick="toggleDrawer(true)">
+        Çanta <span class="bag-count" id="bagCount">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div>
+    <span class="hero-eyebrow">Test Mağazası — Satın Alma Kapalı</span>
+    <h1 class="display">Kumaşın hikayesini<br>vitrine taşı.</h1>
+    <p>Bu, tasarım ve analitik testleri için kurulmuş bir demo mağazadır. Ürünler gerçek, ödeme akışı simülasyondur — sepet ve "satın al" adımları GTM olaylarını tetikler ama hiçbir ödeme işlemi gerçekleşmez.</p>
+  </div>
+  <div class="hero-note">
+    <strong>Nasıl çalışır</strong>
+    Bir ürüne tıkla → detay modalı açılır ve <code>view_item</code> event'i gönderilir. "Çantaya Ekle" → <code>add_to_cart</code>. Çanta içinden "Ödemeye Geç" → <code>begin_checkout</code> event'i gönderir ve orada durur, gerçek ödeme sayfasına gitmez.
+  </div>
+</section>
+
+<div class="swatch-bar">
+  <span class="swatch-label">Kumaş / Renk</span>
+  <div class="swatch active" data-filter="all"><span class="swatch-dot" style="background:linear-gradient(135deg,#6B2737,#A8B5A0);"></span>Tümü</div>
+  <div class="swatch" data-filter="plum"><span class="swatch-dot" style="background:#6B2737;"></span>Bordo</div>
+  <div class="swatch" data-filter="sage"><span class="swatch-dot" style="background:#A8B5A0;"></span>Adaçayı</div>
+  <div class="swatch" data-filter="stone"><span class="swatch-dot" style="background:#D8D3C6;"></span>Taş</div>
+  <div class="swatch" data-filter="ink"><span class="swatch-dot" style="background:#23262B;"></span>Mürekkep</div>
+</div>
+
+<div class="grid-wrap">
+  <div class="grid-header">
+    <h2 class="display">Bu Sezon</h2>
+    <span class="grid-count" id="gridCount">8 ürün</span>
+  </div>
+  <div class="grid" id="productGrid"></div>
+</div>
+
+<footer>
+  VESTRO — Test amaçlı demo mağaza · GitHub Pages üzerinde ücretsiz servis edilmektedir · Gerçek ödeme işlemi içermez
+</footer>
+
+<!-- Product modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="modal-media" id="modalMedia">GÖRSEL</div>
+    <div class="modal-body">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <span class="modal-tag" id="modalTag">Kategori</span>
+      <h3 id="modalTitle">Ürün Adı</h3>
+      <div class="modal-price" id="modalPrice">0 ₺</div>
+      <p class="desc" id="modalDesc">Açıklama.</p>
+      <div class="size-row" id="sizeRow"></div>
+      <button class="add-btn" id="addBtn">Çantaya Ekle</button>
+      <div class="test-flag">Bu bir test ortamıdır. "Çantaya Ekle" tıklaması GTM dataLayer'a <code>add_to_cart</code> event'i gönderir; hiçbir ödeme veya kişisel veri işlemi yapılmaz.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Cart drawer -->
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Çantam</h3>
+    <button class="modal-close" onclick="toggleDrawer(false)">✕</button>
+  </div>
+  <div class="drawer-items" id="drawerItems">
+    <div class="drawer-empty">Çantan boş.</div>
+  </div>
+  <div class="drawer-foot">
+    <div class="drawer-total"><span>Toplam</span><span id="drawerTotal">0 ₺</span></div>
+    <button class="checkout-btn" onclick="fakeCheckout()">Ödemeye Geç</button>
+    <div class="drawer-note">Test modu: bu buton gerçek bir ödeme sayfasına yönlendirmez, yalnızca <code>begin_checkout</code> event'i gönderir.</div>
+  </div>
+</div>
+
+<script>
+window.dataLayer = window.dataLayer || [];
+
+const products = [
+  {id:'p1', tag:'Ceket', title:'Bordo Kaban', price:2450, color:'plum', desc:'Yün karışımlı, çift düğmeli kaban. Kış koleksiyonunun ana parçası.'},
+  {id:'p2', tag:'Gömlek', title:'Taş Rengi Keten Gömlek', price:890, color:'stone', desc:'Nefes alan keten kumaş, günlük kullanım için rahat kesim.'},
+  {id:'p3', tag:'Pantolon', title:'Adaçayı Yüksek Bel Pantolon', price:1120, color:'sage', desc:'Yüksek bel, düz paça, ofis ve günlük kombinlere uygun.'},
+  {id:'p4', tag:'Aksesuar', title:'Mürekkep Deri Kemer', price:540, color:'ink', desc:'Hakiki deri, pirinç toka detaylı kemer.'},
+  {id:'p5', tag:'Elbise', title:'Bordo Midi Elbise', price:1680, color:'plum', desc:'V yaka, midi boy, saten dokulu akşam elbisesi.'},
+  {id:'p6', tag:'Triko', title:'Taş Rengi Kaşmir Triko', price:1340, color:'stone', desc:'%100 kaşmir, yuvarlak yaka, hafif dokulu triko.'},
+  {id:'p7', tag:'Ceket', title:'Adaçayı Blazer', price:1980, color:'sage', desc:'Yapılandırılmış omuz, tek düğmeli klasik blazer.'},
+  {id:'p8', tag:'Aksesuar', title:'Mürekkep Kanvas Çanta', price:620, color:'ink', desc:'Ağır kanvas kumaş, deri kulp detaylı omuz çantası.'}
+];
+
+let cart = [];
+let currentProduct = null;
+let currentSize = null;
+
+function renderGrid(filter='all'){
+  const grid = document.getElementById('productGrid');
+  const list = filter === 'all' ? products : products.filter(p => p.color === filter);
+  grid.innerHTML = list.map(p => `
+    <div class="card" onclick="openModal('${p.id}')">
+      <div class="card-media">${p.tag.toUpperCase()}</div>
+      <div class="card-body">
+        <span class="card-tag">${p.tag}</span>
+        <div class="card-title">${p.title}</div>
+        <div class="card-price">${p.price.toLocaleString('tr-TR')} ₺</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('gridCount').textContent = list.length + ' ürün';
+}
+
+document.querySelectorAll('.swatch').forEach(sw => {
+  sw.addEventListener('click', () => {
+    document.querySelectorAll('.swatch').forEach(s => s.classList.remove('active'));
+    sw.classList.add('active');
+    renderGrid(sw.dataset.filter);
+  });
+});
+
+function openModal(id){
+  const p = products.find(x => x.id === id);
+  currentProduct = p;
+  currentSize = null;
+  document.getElementById('modalMedia').textContent = p.tag.toUpperCase();
+  document.getElementById('modalTag').textContent = p.tag;
+  document.getElementById('modalTitle').textContent = p.title;
+  document.getElementById('modalPrice').textContent = p.price.toLocaleString('tr-TR') + ' ₺';
+  document.getElementById('modalDesc').textContent = p.desc;
+  document.getElementById('sizeRow').innerHTML = ['XS','S','M','L','XL'].map(s =>
+    `<button class="size-btn" onclick="selectSize(this,'${s}')">${s}</button>`).join('');
+  document.getElementById('overlay').classList.add('open');
+
+  dataLayer.push({
+    event: 'view_item',
+    ecommerce: {
+      items: [{ item_id: p.id, item_name: p.title, item_category: p.tag, price: p.price }]
+    }
+  });
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); }
+
+function selectSize(btn, size){
+  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSize = size;
+}
+
+document.getElementById('addBtn').addEventListener('click', () => {
+  if(!currentProduct) return;
+  if(!currentSize){ alert('Lütfen bir beden seç.'); return; }
+  cart.push({...currentProduct, size: currentSize});
+  updateCartUI();
+
+  dataLayer.push({
+    event: 'add_to_cart',
+    ecommerce: {
+      items: [{ item_id: currentProduct.id, item_name: currentProduct.title, item_category: currentProduct.tag, price: currentProduct.price, size: currentSize }]
+    }
+  });
+
+  closeModal();
+  toggleDrawer(true);
+});
+
+function updateCartUI(){
+  document.getElementById('bagCount').textContent = cart.length;
+  const itemsEl = document.getElementById('drawerItems');
+  if(cart.length === 0){
+    itemsEl.innerHTML = '<div class="drawer-empty">Çantan boş.</div>';
+  } else {
+    itemsEl.innerHTML = cart.map(c => `
+      <div class="drawer-item">
+        <span>${c.title} — ${c.size}</span>
+        <span>${c.price.toLocaleString('tr-TR')} ₺</span>
+      </div>
+    `).join('');
+  }
+  const total = cart.reduce((sum, c) => sum + c.price, 0);
+  document.getElementById('drawerTotal').textContent = total.toLocaleString('tr-TR') + ' ₺';
+}
+
+function toggleDrawer(open){
+  document.getElementById('drawer').classList.toggle('open', open);
+}
+
+function fakeCheckout(){
+  if(cart.length === 0){ alert('Çantan boş, önce bir ürün ekle.'); return; }
+  dataLayer.push({
+    event: 'begin_checkout',
+    ecommerce: {
+      value: cart.reduce((s,c)=>s+c.price,0),
+      items: cart.map(c => ({ item_id:c.id, item_name:c.title, price:c.price, size:c.size }))
+    }
+  });
+  alert('Test modu: Bu bir gerçek ödeme akışı değildir.\n"begin_checkout" event\'i GTM/dataLayer\'a gönderildi. Bunu GTM Önizleme modunda görebilirsin.');
+}
+
+// İlk sayfa görüntülemesi
+dataLayer.push({ event: 'page_view', page_path: '/' });
+
+renderGrid();
+</script>
+
+</body>
+</html>
